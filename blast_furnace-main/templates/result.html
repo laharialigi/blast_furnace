@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blast Furnace Prediction</title>
+    <style>
+         body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        .bg-blur {
+            position:absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('static/rinl_result.jpeg'); /* Use your image path */
+            background-size: auto;
+            background-position: center;
+            filter:blur(3px); /* Adjust the blur level as needed */
+            z-index: -1; /* Ensure the blurred background is behind other content */
+        }
+
+        .Title {
+            backdrop-filter: blur(3px);
+            text-align: center;
+            font-size: larger;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        .class_of_diagram {
+            text-align: left;
+           
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .hello {
+            overflow-y: auto; /* Enable vertical scrolling */
+            width: 25%;
+            max-height: 260px; /* Limit max height */
+            padding: 25px;       
+            backdrop-filter: blur(6px);
+            color: white;
+            font-weight: bolder;
+            
+        }
+        .inputs {
+            max-width: 200px; /* Adjust width of form */
+        }
+        .chart-container {
+            display: flex;
+            content: center;
+            max-width: 65%;
+            padding-left:15%;
+            padding-top: 120px;
+            padding-bottom:15%;
+            
+        }
+        .prediction {
+            font-weight: bolder;
+            font-size: large;
+            text-align: center;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blur"></div> <!-- Blurred background image -->
+    <div class="Title">
+        <h1>Skin Temperature Predicted Values</h1>
+    </div>
+    <div class="container">
+        <div class="class_of_diagram">
+            <img src="static/iron7a.gif" alt="BlastFurnace" style="max-height: 500px; max-width: 500px;">
+        </div>
+        <div class="hello">
+            <p class="prediction">Next 1 Hour : <span id="next_1hr_value">{{ next_1hr }}</span></p>
+            <p class="prediction">Next 2 Hour : <span id="next_2hr_value">{{ next_2hr }}</span></p>
+            <p class="prediction">Next 3 Hour : <span id="next_3hr_value">{{ next_3hr }}</span></p>
+            <p class="prediction">Next 4 Hour : <span id="next_4hr_value">{{ next_4hr }}</span></p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="temperatureChart"></canvas>
+    </div>
+
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        
+        // Get temperature values from HTML
+        const next_1hr = parseFloat(document.getElementById('next_1hr_value').textContent);
+        const next_2hr = parseFloat(document.getElementById('next_2hr_value').textContent);
+        const next_3hr = parseFloat(document.getElementById('next_3hr_value').textContent);
+        const next_4hr = parseFloat(document.getElementById('next_4hr_value').textContent);
+
+        // Get the canvas element
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+
+        /// Create the chart
+        const temperatureChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1hr', '2hr', '3hr', '4hr'],
+                datasets: [{
+                    label: 'Temperature Prediction',
+                    data: [next_1hr, next_2hr, next_3hr, next_4hr],
+                    borderColor: 'rgb(75, 192, 192)', // Line color
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Area fill color
+                    pointBackgroundColor: 'rgb(75, 192, 192)', // Peak points color
+                    pointBorderColor: 'rgb(75, 192, 192)', // Peak points border color
+                    pointRadius: 5, // Peak points size
+                    tension: 0.1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 24 // Font size
+                            },
+                            color: 'rgb(0, 0, 0)' // Font color
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false, // Modify as per your requirement
+                        ticks: {
+                            font: {
+                                size: 16 // Font size for y-axis
+                            },
+                            color: 'rgb(0, 0, 0)' // Font color for y-axis
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 16 // Font size for x-axis
+                            },
+                            color: 'rgb(0, 0, 0)' // Font color for x-axis
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
